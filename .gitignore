@@ -1,0 +1,4 @@
+*.o
+*.changshi
+MDK-ARM/Objects/*
+MDK-ARM/Listings/*
