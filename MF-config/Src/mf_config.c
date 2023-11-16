@@ -254,7 +254,7 @@ void MF_Spi_Init(void)
 	spi.clockPhase = FL_SPI_PHASE_EDGE2;
 	spi.softControl = FL_ENABLE;
 	//spi.baudRate = FL_SPI_BAUDRATE_DIV4;//in
-	spi.baudRate = FL_SPI_BAUDRATE_DIV16;//out
+	spi.baudRate = FL_SPI_BAUDRATE_DIV32;//out
 	spi.bitOrder = FL_SPI_BIT_ORDER_MSB_FIRST;
 
 	FL_SPI_Init(SPI1, &spi);
