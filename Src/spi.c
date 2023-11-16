@@ -492,21 +492,21 @@ void UOC_Spi_Error_E02(void)
 	{
 		stand_cur = (int)g_uoc_param.RatedCurrent1;
 	}
-	int a_cur_data,b_cur_data,c_cur_data,stand_data = 0;
-	dbg_printf("e02 stand_cur :%d\n",(int)stand_cur);
-	dbg_printf("e02 stand_cur*115 :%d\n",(int)(stand_cur*115));
-	dbg_printf("e02 A_Cur :%d\n",(int)(UOC_Check_Para.A_Cur*1000));
-	dbg_printf("e02 B_Cur :%d\n",(int)(UOC_Check_Para.B_Cur*1000));
-	dbg_printf("e02 C_Cur :%d\n",(int)(UOC_Check_Para.C_Cur*1000));
-	a_cur_data = (int)(UOC_Check_Para.A_Cur*1000);
-	b_cur_data = (int)(UOC_Check_Para.B_Cur*1000);
-	c_cur_data = (int)(UOC_Check_Para.C_Cur*1000);
-	stand_data = (int)(stand_cur*115);
+//	int a_cur_data,b_cur_data,c_cur_data,stand_data = 0;
+//	dbg_printf("e02 stand_cur :%d\n",(int)stand_cur);
+//	dbg_printf("e02 stand_cur*115 :%d\n",(int)(stand_cur*115));
+//	dbg_printf("e02 A_Cur :%d\n",(int)(UOC_Check_Para.A_Cur*1000));
+//	dbg_printf("e02 B_Cur :%d\n",(int)(UOC_Check_Para.B_Cur*1000));
+//	dbg_printf("e02 C_Cur :%d\n",(int)(UOC_Check_Para.C_Cur*1000));
+//	a_cur_data = (int)(UOC_Check_Para.A_Cur*1000);
+//	b_cur_data = (int)(UOC_Check_Para.B_Cur*1000);
+//	c_cur_data = (int)(UOC_Check_Para.C_Cur*1000);
+//	stand_data = (int)(stand_cur*115);
 	
-	dbg_printf("e02 stand_data:%d\n",stand_data);
-	dbg_printf("e02 A_Cur_data :%d\n",a_cur_data);
-	dbg_printf("e02 B_Cur_data :%d\n",b_cur_data);
-	dbg_printf("e02 C_Cur_data :%d\n",c_cur_data);
+//	dbg_printf("e02 stand_data:%d\n",stand_data);
+//	dbg_printf("e02 A_Cur_data :%d\n",a_cur_data);
+//	dbg_printf("e02 B_Cur_data :%d\n",b_cur_data);
+//	dbg_printf("e02 C_Cur_data :%d\n",c_cur_data);
 	if(UOC_ERR_PARA[E02].flag == 0)
 	{
 		if((((int)UOC_Check_Para.A_Cur * 1000) > ((int)(stand_cur*115))) && (((int)UOC_Check_Para.B_Cur*1000) > ((int)(stand_cur*115))) && (((int)UOC_Check_Para.C_Cur*1000) > ((int)(stand_cur*115))))
@@ -694,6 +694,10 @@ void UOC_Spi_Error_E05(void)
 			{
 				uoc_ERR_Flag_clean();
 				UOCPara.new_state = F_ERR;
+				dbg_printf("e05 set Phase_num:%d\n",g_uoc_param.Phase_num);
+				dbg_printf("e05 A_Phase:%d\n",UOC_Check_Para.A_Phase);
+				dbg_printf("e05 B_Phase:%d\n",UOC_Check_Para.B_Phase);
+				dbg_printf("e05 C_Phase:%d\n",UOC_Check_Para.C_Phase);
 				UOC_ERR_PARA[E05].flag = 1;
 			}
 		}

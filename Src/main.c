@@ -18,7 +18,7 @@ volatile uint32_t g_u32SysTickCount = 0;
 extern gUOCParameter_TypeDef g_uoc_param;
 extern gUOCParameter_TypeDef g_uoc_init_param;
 extern gUOCControl_StateDef UOC_Input_State;
-uint8_t UOC_VER[4] = {2,3,3,3};
+uint8_t UOC_VER[4] = {2,3,3,4};
 void uoc_wdt_init(void)
 {
     FL_IWDT_InitTypeDef IWDT_InitStruct;

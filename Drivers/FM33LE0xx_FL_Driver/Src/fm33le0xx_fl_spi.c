@@ -172,7 +172,7 @@ FL_ErrorStatus FL_SPI_Init(SPI_Type *SPIx, FL_SPI_InitTypeDef *initStruct)
     /* 时钟极性 */
     FL_SPI_SetClockPolarity(SPIx, initStruct->clockPolarity);
 		/*新增修改MSPA寄存器*/
-		FL_SPI_SetMasterSamplingAdjust(SPIx,1);
+		//FL_SPI_SetMasterSamplingAdjust(SPIx,1);
     /* 使能 外设*/
     FL_SPI_Enable(SPIx);
     return FL_PASS;
