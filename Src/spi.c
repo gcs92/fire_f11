@@ -682,7 +682,15 @@ void UOC_Spi_Error_E05(void)
 	
 }
 	if(UOC_ERR_PARA[E05].flag == 0){
-		if(((g_uoc_param.Phase_num-10) > Phase_num) || ((g_uoc_param.Phase_num+10) < Phase_num))//判断条件
+		if(((g_uoc_param.WrongPhaseFlag == 2) 
+			&& ((UOC_Check_Para.A_Phase < 135) && (UOC_Check_Para.A_Phase > 105))
+			&& ((UOC_Check_Para.B_Phase < 255) && (UOC_Check_Para.B_Phase > 225))
+			&& ((UOC_Check_Para.C_Phase < 135) && (UOC_Check_Para.C_Phase > 105))) 
+		||((g_uoc_param.WrongPhaseFlag == 1) 
+			&& ((UOC_Check_Para.A_Phase < 255) && (UOC_Check_Para.A_Phase > 225))
+			&& ((UOC_Check_Para.B_Phase < 135) && (UOC_Check_Para.B_Phase > 105))
+			&& ((UOC_Check_Para.C_Phase < 255) && (UOC_Check_Para.C_Phase > 225))))
+		//if(((g_uoc_param.Phase_num-10) > Phase_num) || ((g_uoc_param.Phase_num+10) < Phase_num))//判断条件
 		{
 			
 			if(UOC_ERR_PARA[E05].fisrt_flag == 0)
