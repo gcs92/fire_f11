@@ -113,8 +113,8 @@ uint32_t SPI_Read_Cmd(uint32_t cmd)
 
 void SPI_Test(void)
 {
-	uint8_t wbuf[8] = {0x0D, 0x00, 0x00, 0x00, 0x55, 0x66, 0xAA, 0xBB};
-	uint8_t rbuf[4] = {0};
+	//uint8_t wbuf[8] = {0x0D, 0x00, 0x00, 0x00, 0x55, 0x66, 0xAA, 0xBB};
+	//uint8_t rbuf[4] = {0};
 	uint32_t data_num = 0;
 
 	/*A voltage data read*///data_num = data_num & 0x0007FFFF;
@@ -674,8 +674,8 @@ void UOC_Spi_Error_E05(void)
 	//return;//600 //480 120 240 120
 	uint32_t check_max = 0;
 	uint32_t check_min = 0;
-	uint32_t Phase_num =0;
-	Phase_num = UOC_Check_Para.A_Phase + UOC_Check_Para.B_Phase + UOC_Check_Para.C_Phase;
+	//uint32_t Phase_num =0;
+	//Phase_num = UOC_Check_Para.A_Phase + UOC_Check_Para.B_Phase + UOC_Check_Para.C_Phase;
 
 	if(UOC_Check_Para.A_Vol > UOC_Check_Para.B_Vol){
 			check_max = UOC_Check_Para.A_Vol;
