@@ -47,7 +47,9 @@ uint32_t SPI_ReadWrite(uint32_t data)
 	while(!(FL_SPI_IsActiveFlag_TXBuffEmpty(SPI1)));
 
 	while(!(FL_SPI_IsActiveFlag_RXBuffFull(SPI1)));
-
+	for(int i = 0; i< 100;i++)
+	{}
+	
 	data = FL_SPI_ReadRXBuff(SPI1);
 
 	FL_SPI_SetSSNPin(SPI1, FL_SPI_SSN_HIGH);
@@ -96,10 +98,11 @@ uint32_t SPI_Read_Cmd(uint32_t cmd)
 	FL_SPI_SetSSNPin(SPI1, FL_SPI_SSN_LOW);
 
 	// Dummy write
-	FL_SPI_WriteTXBuff(SPI1, 0);
+	FL_SPI_WriteTXBuff(SPI1, cmd);
 
 	while(!(FL_SPI_IsActiveFlag_RXBuffFull(SPI1)));
 
+	
 	data_num = FL_SPI_ReadRXBuff(SPI1);
 	//dbg_printf("\t\t\t data_num	: %08x \n",data_num);
 
@@ -110,18 +113,30 @@ uint32_t SPI_Read_Cmd(uint32_t cmd)
 
 void SPI_Test(void)
 {
-	uint8_t wbuf[8] = {0x00, 0x00, 0x00, 0x00, 0x55, 0x66, 0xAA, 0xBB};
-	uint8_t rbuf[3] = {0};
+	uint8_t wbuf[8] = {0x0D, 0x00, 0x00, 0x00, 0x55, 0x66, 0xAA, 0xBB};
+	uint8_t rbuf[4] = {0};
+	uint32_t data_num = 0;
+
+	/*A voltage data read*///data_num = data_num & 0x0007FFFF;
+	
+	
 
 	// Read and write
-	rbuf[0] = SPI_ReadWrite(rbuf[0]);
+	//rbuf[0] = SPI_ReadWrite(rbuf[0]);
 	
 	// Write buffer
-	SPI_Write(wbuf, 4);
+	//SPI_Write(wbuf, 1);
 	
 	// Read to buffer
-	SPI_Read(rbuf,3);
-	//dbg_array_buffer("spi before",rbuf,3);
+	//SPI_Read(rbuf,4);
+	//dbg_array_buffer("spi before:",rbuf,4);
+	//data_num = rbuf[0] + rbuf[1] << 8 + rbuf[2] << 16 + rbuf[3] << 24;
+	data_num = SPI_Read_data(UOC_SPI_PHASE_A_VOLTAGE);
+	debug_log("%s:%d: UOC_SPI_PHASE_A_VOLTAGE:%x\n",__func__,__LINE__,data_num);
+	data_num = (int)(data_num * UOC_Voltage_Offsets);
+	data_num = (int)((data_num * g_uoc_param.VolCorParam)/100);
+	debug_log("%s:%d: Avoltage:%d\n",__func__,__LINE__,data_num);
+	UOC_Check_Para.A_Vol = (int)((data_num%10000000)/10000);
 
 }
 
@@ -129,8 +144,8 @@ uint32_t SPI_Read_data(uint32_t cmd)
 {
 	uint32_t read_data= 0;
 	// Read and write
-	SPI_ReadWrite(cmd);
-	
+	//SPI_ReadWrite(cmd);
+
 	// Read to buffer
 	read_data =SPI_Read_Cmd(cmd);
 	//dbg_array_buffer("spi",rbuf,8);
@@ -160,16 +175,16 @@ int SPI_Check(void)
 
 	SPI_ReadWrite(UOC_SPI_READ_CHECK_EN);//c6 0000005A
 	read_data=SPI_Read_data(0X01000000);
-	debug_log("%s:%d:0x01 data:%08x\n",__func__,__LINE__,read_data);
+	//debug_log("%s:%d:0x01 data:%08x\n",__func__,__LINE__,read_data);
 	if(read_data != (UOC_SPI_SET_MODE &0x0000ffff))
 		return -1;
 	
 	read_data=SPI_Read_data(0X03000000);
-	debug_log("%s:%d:0x03 data:%08x\n",__func__,__LINE__,read_data);
+	//debug_log("%s:%d:0x03 data:%08x\n",__func__,__LINE__,read_data);
 	if(read_data != (UOC_SPI_SET_EMU_EN &0x0000ffff))
 		return -1;
 	read_data=SPI_Read_data(0X31000000);
-	debug_log("%s:%d:0x31 data:%08x\n",__func__,__LINE__,read_data);
+	//debug_log("%s:%d:0x31 data:%08x\n",__func__,__LINE__,read_data);
 	if(read_data != (UOC_SPI_SET_BOR_EN &0x0000ffff))
 		return -1;
 	
