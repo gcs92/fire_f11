@@ -492,7 +492,7 @@ void UOC_Spi_Error_E01(void)
 }
 void UOC_Spi_Error_E02(void)
 {
-	int stand_cur=0;
+	float stand_cur=0;
 	if((UOC_Input_State.Ordinary_fan == 0) && (UOC_Input_State.high_speed_fan ==0)){
 		Control_R03R04R05R06_Function(UOC_FAN_OVERLOAD,CLOSE);
 		UOC_ERR_PARA[E02].fisrt_flag = 0;
@@ -501,30 +501,16 @@ void UOC_Spi_Error_E02(void)
 	}
 	if(UOC_Input_State.Ordinary_fan == 1)
 	{
-		stand_cur = (int)g_uoc_param.RatedCurrent2;
+		stand_cur = (float)g_uoc_param.RatedCurrent2;
 	}
 	else if(UOC_Input_State.high_speed_fan == 1)
 	{
-		stand_cur = (int)g_uoc_param.RatedCurrent1;
+		stand_cur = (float)g_uoc_param.RatedCurrent1;
 	}
-//	int a_cur_data,b_cur_data,c_cur_data,stand_data = 0;
-//	dbg_printf("e02 stand_cur :%d\n",(int)stand_cur);
-//	dbg_printf("e02 stand_cur*115 :%d\n",(int)(stand_cur*115));
-//	dbg_printf("e02 A_Cur :%d\n",(int)(UOC_Check_Para.A_Cur*1000));
-//	dbg_printf("e02 B_Cur :%d\n",(int)(UOC_Check_Para.B_Cur*1000));
-//	dbg_printf("e02 C_Cur :%d\n",(int)(UOC_Check_Para.C_Cur*1000));
-//	a_cur_data = (int)(UOC_Check_Para.A_Cur*1000);
-//	b_cur_data = (int)(UOC_Check_Para.B_Cur*1000);
-//	c_cur_data = (int)(UOC_Check_Para.C_Cur*1000);
-//	stand_data = (int)(stand_cur*115);
-	
-//	dbg_printf("e02 stand_data:%d\n",stand_data);
-//	dbg_printf("e02 A_Cur_data :%d\n",a_cur_data);
-//	dbg_printf("e02 B_Cur_data :%d\n",b_cur_data);
-//	dbg_printf("e02 C_Cur_data :%d\n",c_cur_data);
+
 	if(UOC_ERR_PARA[E02].flag == 0)
 	{
-		if((((int)UOC_Check_Para.A_Cur * 1000) > ((int)(stand_cur*115))) && (((int)UOC_Check_Para.B_Cur*1000) > ((int)(stand_cur*115))) && (((int)UOC_Check_Para.C_Cur*1000) > ((int)(stand_cur*115))))
+		if(((UOC_Check_Para.A_Cur * 1000) > ((stand_cur*115))) && ((UOC_Check_Para.B_Cur*1000) > ((stand_cur*115))) && ((UOC_Check_Para.C_Cur*1000) > ((stand_cur*115))))
 		{
 			if(UOC_ERR_PARA[E02].fisrt_flag == 0)
 			{
@@ -566,7 +552,7 @@ void UOC_Spi_Error_E02(void)
 }
 void UOC_Spi_Error_E03(void)
 {
-	int stand_cur=0;
+	float stand_cur=0;
 	if((UOC_Input_State.Ordinary_fan == 0) && (UOC_Input_State.high_speed_fan ==0)){
 		Control_R03R04R05R06_Function(UOC_FAN_OVERLOAD,CLOSE);
 		Output_Control(UOC_D00,CONTORL_HIGH);//测试
@@ -577,21 +563,24 @@ void UOC_Spi_Error_E03(void)
 	if(UOC_Input_State.Ordinary_fan == 1)
 	{
 		stand_cur = (float)g_uoc_param.RatedCurrent2;
+		//stand_cur = (int)g_uoc_param.RatedCurrent2;
 	}
 	else if(UOC_Input_State.high_speed_fan == 1)
 	{
 		stand_cur = (float)g_uoc_param.RatedCurrent1;
+		//stand_cur = (int)g_uoc_param.RatedCurrent1;
 	}
 	if(UOC_ERR_PARA[E03].flag == 0)
 	{
-		if((((int)UOC_Check_Para.A_Cur * 1000) > ((int)(stand_cur*150))) && (((int)UOC_Check_Para.B_Cur * 1000) > ((int)(stand_cur*150))) && (((int)UOC_Check_Para.C_Cur * 1000) > ((int)(stand_cur*150))))
+		if(((UOC_Check_Para.A_Cur * 100) > ((stand_cur*15))) && 
+			((UOC_Check_Para.B_Cur * 100) > ((stand_cur*15))) && 
+				((UOC_Check_Para.C_Cur * 100) > ((stand_cur*15))))
 		{
 			Output_Control(UOC_D00,CONTORL_LOW);//测试
 			if(UOC_ERR_PARA[E03].fisrt_flag == 0)
 			{
 				UOC_ERR_PARA[E03].fisrt_flag = 1;
 				UOC_ERR_PARA[E03].time_out = GetSysTickCount();
-				dbg_printf("e03 C_Cur :%d\n",(int)(UOC_Check_Para.C_Cur*1000));
 			}
 			else if((UOC_ERR_PARA[E03].time_out + (g_uoc_param.CurOverShortDelayTime *1000 ))< GetSysTickCount())
 			{
