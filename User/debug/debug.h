@@ -105,7 +105,7 @@ typedef struct _UART_X
 #define UART2_USED				0
 #define UART3_USED				0//no
 #define UART4_USED				0
-#define UART5_USED				0
+#define UART5_USED				1
 #define UART6_USED				0//no
 
 #define DEBUG_BUF_SIZE 256
@@ -142,7 +142,7 @@ void *MemSet(void *s1, uint8_t c, uint16_t n);
 void dbg_printf(const char *fmt, ...);
 void Debug_Display(void* buf,uint16_t len);
 void dbg_array_buffer(char* msg,void* buf,uint16_t len);
-void Show_Param_info(void);
+
 
 #define dbg_log(lvl, fmt, ...)                \
     do                                                      \

@@ -2,21 +2,12 @@
 #define __SYSTEM_CONTROL_H__
 #include "fm33le0xx_fl.h"
 
-#define DI0()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_1)
-#define DI1()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_0)
-#define DI2()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_11)
-#define DI3()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_10)
-#define DI4()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_9)
-#define DI5()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_0)
-#define DI6()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_1)
-#define DI7()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_2)
-#define DI8()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_3)
-#define DI9()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_4)
-#define DI10()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_5)
-#define DI11()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_6)
-#define DI12()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_7)
-#define DI13()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_12)
-#define DI14()	FL_GPIO_GetInputPin(GPIOC, FL_GPIO_PIN_1)
+#define DI0()	FL_GPIO_GetInputPin(GPIOA, FL_GPIO_PIN_13)
+#define DI1()	FL_GPIO_GetInputPin(GPIOA, FL_GPIO_PIN_15)
+#define DI2()	FL_GPIO_GetInputPin(GPIOA, FL_GPIO_PIN_14)
+#define DI3()	FL_GPIO_GetInputPin(GPIOA, FL_GPIO_PIN_8)
+#define DI4()	FL_GPIO_GetInputPin(GPIOA, FL_GPIO_PIN_9)
+
 
 #define CONTORL_HIGH	1
 #define CONTORL_LOW		0
@@ -111,16 +102,6 @@ typedef enum
 	UOC_DI2,
 	UOC_DI3,
 	UOC_DI4,
-	UOC_DI5,
-	UOC_DI6,
-	UOC_DI7,
-	UOC_DI8,
-	UOC_DI9,
-	UOC_DI10,
-	UOC_DI11,
-	UOC_DI12,
-	UOC_DI13,
-	UOC_DI14,
 	UOC_DIMAX,
 } ENUM_DI;
 
@@ -133,48 +114,19 @@ typedef struct
     void (*cb)(void);
 } sDInputEvent_TypeDef;
 
-typedef enum
-{ 
-	External_Control_Stop = 0, 	//外控停止
-	External_Control_Start,		//外控启动
-	Emergency_Start,			//应急启动
-	Dynamic_Control,			//联动控制
-	Low_Speed_Fan,				//低速风机
-	High_Speed_Fan,				//高速风机
-	Controlled_Feedback,		//受控反馈
-	Fire_Damper,				//防火阀
-	High_Speed_Fan_Dynamic_Start,//消防联动手动开启
-	High_Speed_Fan_Dynamic_Stop,//消防联动手动关闭
-	Low_Speed_Fan_Dynamic_Start,//低速联动手动开启
-	Smoke_Exhaust_Valve_Stop,	//排烟阀关
-	Smoke_Exhaust_Valve_Start,	//排烟阀开
-	DI7_DI14MAX,				//DI7-DI14功能最大值
-} ENUM_DI7_DI14;
-
 
 
 void Input_Detection(void);
 void Output_Control(unsigned char name,unsigned char flag);
-void Control_High_Speed_Fan(unsigned char flag);
 void Control_Ordinary_Fan(unsigned char flag);
 void UOC_Trip_Fan(void);
-void Control_R03R04R05R06_Function(unsigned id,unsigned char flag);
 
 void UOC_DI0_FUNC(void);
 void UOC_DI1_FUNC(void);
 void UOC_DI2_FUNC(void);
 void UOC_DI3_FUNC(void);
 void UOC_DI4_FUNC(void);
-void UOC_DI5_FUNC(void);
-void UOC_DI6_FUNC(void);
-void UOC_DI7_FUNC(void);
-void UOC_DI8_FUNC(void);
-void UOC_DI9_FUNC(void);
-void UOC_DI10_FUNC(void);
-void UOC_DI11_FUNC(void);
-void UOC_DI12_FUNC(void);
-void UOC_DI13_FUNC(void);
-void UOC_DI14_FUNC(void);
+
 
 
 #endif

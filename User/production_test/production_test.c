@@ -798,14 +798,15 @@ void production_test_model4(void)
 void production_test_main(void)
 {
 	unsigned char ret=0;
-	ret = Join_Production_Test();
-	if(ret == 1)
-	{
-		dbg_printf("join test module !!!!!!!\n");
-		while (1)
-		{
-			key_func_cyc();
-			pro_test_func[key_state].cb();
-		}
-	}
+	dbg_printf("join test module !!!!!!!\n");
+	// ret = Join_Production_Test();
+	// if(ret == 1)
+	// {
+	// 	dbg_printf("join test module !!!!!!!\n");
+	// 	while (1)
+	// 	{
+	// 		key_func_cyc();
+	// 		pro_test_func[key_state].cb();
+	// 	}
+	// }
 }

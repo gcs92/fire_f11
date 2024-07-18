@@ -264,14 +264,15 @@ void MF_Led_Init(void)
 {
 	FL_GPIO_InitTypeDef GPIO_InitStruct;
 
-    GPIO_InitStruct.pin = FL_GPIO_PIN_1 | FL_GPIO_PIN_2 | FL_GPIO_PIN_3| FL_GPIO_PIN_4| FL_GPIO_PIN_5| FL_GPIO_PIN_6| FL_GPIO_PIN_7| FL_GPIO_PIN_8;
+    GPIO_InitStruct.pin = FL_GPIO_PIN_3 | FL_GPIO_PIN_8 | FL_GPIO_PIN_9|
+                        FL_GPIO_PIN_10| FL_GPIO_PIN_11;
     GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.pull = FL_DISABLE;
     GPIO_InitStruct.remapPin = FL_DISABLE;
-    FL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    FL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	GPIO_InitStruct.pin = FL_GPIO_PIN_10 | FL_GPIO_PIN_12 | FL_GPIO_PIN_11;
+	GPIO_InitStruct.pin = FL_GPIO_PIN_8 | FL_GPIO_PIN_9 | FL_GPIO_PIN_10;
     GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.pull = FL_DISABLE;
@@ -282,68 +283,69 @@ void MF_Led_Init(void)
 void MF_Button_Init(void)
 {
 	FL_GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_InitStruct.pin = FL_GPIO_PIN_6 | FL_GPIO_PIN_7 | FL_GPIO_PIN_8 | FL_GPIO_PIN_9;
+	GPIO_InitStruct.pin = FL_GPIO_PIN_8 | FL_GPIO_PIN_9 | FL_GPIO_PIN_10 
+                        | FL_GPIO_PIN_13| FL_GPIO_PIN_14| FL_GPIO_PIN_15;
 	GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.pull = FL_ENABLE;
-	GPIO_InitStruct.remapPin = FL_DISABLE;
-	FL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-}
-
-void MF_Control_Init(void)
-{
-	/*======================output init=========================================================*/
-	FL_GPIO_InitTypeDef GPIO_InitStruct;
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_0);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_1);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_2);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_3);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_4);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_5);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_6);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_7);
-	FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_8);
-	GPIO_InitStruct.pin =   FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_2 |
-		                    FL_GPIO_PIN_3 | FL_GPIO_PIN_4 | FL_GPIO_PIN_5 |
-		                    FL_GPIO_PIN_6 | FL_GPIO_PIN_7 | FL_GPIO_PIN_8 | 
-		                    FL_GPIO_PIN_13| FL_GPIO_PIN_14| FL_GPIO_PIN_15;
-	GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.pull = FL_ENABLE;
 	GPIO_InitStruct.remapPin = FL_DISABLE;
 	FL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+void MF_Control_Init(void)
+{
+	// /*======================output init=========================================================*/
+	// FL_GPIO_InitTypeDef GPIO_InitStruct;
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_0);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_1);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_2);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_3);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_4);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_5);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_6);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_7);
+	// // FL_GPIO_SetOutputPin(GPIOA,FL_GPIO_PIN_8);
+	// GPIO_InitStruct.pin =   FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_2 |
+	// 	                    FL_GPIO_PIN_3 | FL_GPIO_PIN_4 | FL_GPIO_PIN_5 |
+	// 	                    FL_GPIO_PIN_6 | FL_GPIO_PIN_7 | FL_GPIO_PIN_8 | 
+	// 	                    FL_GPIO_PIN_13| FL_GPIO_PIN_14| FL_GPIO_PIN_15;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_ENABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+	// FL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
 	
-	GPIO_InitStruct.pin = FL_GPIO_PIN_2 | FL_GPIO_PIN_3 | FL_GPIO_PIN_4 | FL_GPIO_PIN_5 | FL_GPIO_PIN_6;
-	GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
-	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.pull = FL_DISABLE;
-	GPIO_InitStruct.remapPin = FL_DISABLE;
-	FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-	/*======================intput init=========================================================*/	
-	GPIO_InitStruct.pin = FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_2 | FL_GPIO_PIN_3 | FL_GPIO_PIN_4 |
-								FL_GPIO_PIN_5 | FL_GPIO_PIN_6 | FL_GPIO_PIN_7 | FL_GPIO_PIN_12;
-	GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.pull = FL_ENABLE;
-	GPIO_InitStruct.remapPin = FL_DISABLE;
-	FL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_2 | FL_GPIO_PIN_3 | FL_GPIO_PIN_4 | FL_GPIO_PIN_5 | FL_GPIO_PIN_6;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_OUTPUT;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_DISABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+	// FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+	// /*======================intput init=========================================================*/	
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_2 | FL_GPIO_PIN_3 | FL_GPIO_PIN_4 |
+	// 							FL_GPIO_PIN_5 | FL_GPIO_PIN_6 | FL_GPIO_PIN_7 | FL_GPIO_PIN_12;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_ENABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+	// FL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
-	GPIO_InitStruct.pin = FL_GPIO_PIN_1;
-	GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.pull = FL_ENABLE;
-	GPIO_InitStruct.remapPin = FL_DISABLE;
-	FL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_1;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_ENABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+	// FL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 
-	GPIO_InitStruct.pin = FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_9 | FL_GPIO_PIN_10 | FL_GPIO_PIN_11;
-	GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.pull = FL_ENABLE;
-	GPIO_InitStruct.remapPin = FL_DISABLE;
-	FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_9 | FL_GPIO_PIN_10 | FL_GPIO_PIN_11;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_ENABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+	// FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
 }
@@ -398,6 +400,9 @@ void MF_NVIC_Init(void)
 
 	InterruptConfigStruct.preemptPriority = 2;
     FL_NVIC_Init(&InterruptConfigStruct,UART1_IRQn ); 
+
+  InterruptConfigStruct.preemptPriority = 2;
+    FL_NVIC_Init(&InterruptConfigStruct,UART5_IRQn ); 
 }
 
 void MF_UART1_Init(void)
@@ -430,8 +435,39 @@ void MF_UART1_Init(void)
     defaultInitStruct.transferDirection = FL_UART_DIRECTION_TX_RX;
 
     FL_UART_Init(UART1,&defaultInitStruct );
+    
+}
 
+void MF_UART5_Init(void)
+{
 
+    FL_GPIO_InitTypeDef    GPIO_InitStruct;
+
+    FL_UART_InitTypeDef    defaultInitStruct;
+
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_1;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_DISABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+
+	// FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	GPIO_InitStruct.pin = FL_GPIO_PIN_1 | FL_GPIO_PIN_0;
+	GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
+	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.pull = FL_DISABLE;
+	GPIO_InitStruct.remapPin = FL_DISABLE;
+	FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    defaultInitStruct.clockSrc          = FL_RCC_UART1_CLK_SOURCE_APB1CLK;
+    defaultInitStruct.baudRate          = 9600;
+    defaultInitStruct.dataWidth         = FL_UART_DATA_WIDTH_8B;
+    defaultInitStruct.stopBits          = FL_UART_STOP_BIT_WIDTH_1B;
+    defaultInitStruct.parity            = FL_UART_PARITY_EVEN;
+    defaultInitStruct.transferDirection = FL_UART_DIRECTION_TX_RX;
+
+    FL_UART_Init(UART5,&defaultInitStruct );
     
 }
 void MF_SysTemRest(void)
@@ -443,6 +479,10 @@ void MF_SysTemRest(void)
 void MF_Debug_Init()
 {
 	MF_UART1_Init();
+}
+void MF_UART_Init()
+{
+	MF_UART5_Init();
 }
 
 void MF_Production_Init()
@@ -460,13 +500,14 @@ void MF_Production_Init()
 
 void MF_Config_Init(void)
 {
-	MF_Control_Init();
-	MF_Spi_Init();
+	//MF_Control_Init();
+	//MF_Spi_Init();
 	MF_Led_Init();
-	MF_Debug_Init();
-	MF_Production_Init();
+	MF_Debug_Init();    //打印uart
+  MF_UART_Init();     //数据uart
+	MF_Production_Init();//生产自检模式
 	MF_Button_Init();
-	MF_I2C_Init();
+	//MF_I2C_Init();
 	MF_GPTIM0_TimerBase_Init();
 	MF_GPTIM1_TimerBase_Init();
 	MF_NVIC_Init();
@@ -475,6 +516,9 @@ void MF_Config_Init(void)
 
 		FL_UART_ClearFlag_RXBuffFull(UART1);
     FL_UART_EnableIT_RXBuffFull(UART1);           //使能接收中断
+
+    FL_UART_ClearFlag_RXBuffFull(UART5);
+    FL_UART_EnableIT_RXBuffFull(UART5);           //使能接收中断
 	//FL_UART_DisableIT_TXShiftBuffEmpty(UART1);
 }
 

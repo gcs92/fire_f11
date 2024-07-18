@@ -5,7 +5,6 @@
 
 extern sKeyFlag_TypeDef uoc_key[key_max];
 extern sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX];
-extern gUOCControl_StateDef UOC_Input_State;
 
 void GPTIM_Start()
 {
@@ -45,18 +44,6 @@ void GPTIM1_IRQHandler()
         	{
         		uoc_DI_Funtion[i].timeCount++;
         	}
-		}
-		if(UOC_Input_State.fan_flag)
-		{
-			UOC_Input_State.fan_timeCount++;
-		}
-		if(UOC_Input_State.Smoke_Exhaust_Valve_Stop_check_flag==1)
-		{
-			UOC_Input_State.Smoke_timeCount++;
-		}
-		if(UOC_Input_State.Smoke_Exhaust_Valve_Start_check_flag ==1)
-		{
-			UOC_Input_State.Smoke_timeCount++;
 		}
 			
     }

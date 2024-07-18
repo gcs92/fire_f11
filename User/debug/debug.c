@@ -179,6 +179,17 @@ void UART1_IRQHandler(void)
         UART_Rx_Handler(1);
     }
 }
+
+void UART5_IRQHandler(void)
+{
+    //接收中断处理
+    if((FL_ENABLE == FL_UART_IsEnabledIT_RXBuffFull(UART5))
+            && (FL_SET == FL_UART_IsActiveFlag_RXBuffFull(UART5)))
+    {
+        //中断转发接收到的数据
+        UART_Rx_Handler(5);
+    }
+}
 //两个字符串相等，则返回0，不相等则返回1
 uint16_t MemCmp(void *s1, const void *s2, uint16_t n)
 {
@@ -265,65 +276,7 @@ void dbg_array_buffer(char* msg,void* buf,uint16_t len)
 	dbg_printf("\n");	
 	return;
 }
-void Show_Param_info(void)
-{
-	dbg_printf("显示参数信息\n");
-	dbg_printf("\t FanType:%d \n",g_uoc_param.FanType);
-	dbg_printf("\t RatedCurrent1:%d \n",g_uoc_param.RatedCurrent1);
-	dbg_printf("\t RatedCurrent2:%d \n",g_uoc_param.RatedCurrent2);
-	dbg_printf("\t CurTransRatedCurrent:%d \n",g_uoc_param.CurTransRatedCurrent);
-	dbg_printf("\t CurTransPierceTimes1:%d \n",g_uoc_param.CurTransPierceTimes1);
-	dbg_printf("\t CurTransPierceTimes2:%d \n",g_uoc_param.CurTransPierceTimes2);
-	dbg_printf("\t Restart:%d \n",g_uoc_param.Restart);
-	dbg_printf("\t RestoreFactorySettings:%d \n",g_uoc_param.RestoreFactorySettings);
-	dbg_printf("\t VoltageFaultState:%d \n",g_uoc_param.VoltageFaultState);
-	dbg_printf("\t FanStopState:%d \n",g_uoc_param.FanStopState);
-	dbg_printf("\t CurCorParam:%d \n",g_uoc_param.CurCorParam);
-	dbg_printf("\t CurOverShortDelayFlag:%d \n",g_uoc_param.CurOverShortDelayFlag);
-	dbg_printf("\t CurOverShortDelayTime:%d \n",g_uoc_param.CurOverShortDelayTime);
-	dbg_printf("\t CurOverLongDelayFlag:%d \n",g_uoc_param.CurOverLongDelayFlag);
-	dbg_printf("\t CurOverLongDelayTime:%d \n",g_uoc_param.CurOverLongDelayTime);
-	dbg_printf("\t MotorShortCircuitFlag:%d \n",g_uoc_param.MotorShortCircuitFlag);
-	dbg_printf("\t ShortCircuitMax:%d \n",g_uoc_param.ShortCircuitMax);
-	dbg_printf("\t ShortCircuitDelay:%d \n",g_uoc_param.ShortCircuitDelay);
-	dbg_printf("\t DischargeSmokeOutputTime:%d \n",g_uoc_param.DischargeSmokeOutputTime);
-	dbg_printf("\t DischargeSmokeFeedbackTime:%d \n",g_uoc_param.DischargeSmokeFeedbackTime);
-	dbg_printf("\t VolCorParam:%d \n",g_uoc_param.VolCorParam);
-	dbg_printf("\t VolOverFlag:%d \n",g_uoc_param.VolOverFlag);
-	dbg_printf("\t VolOverMax:%d \n",g_uoc_param.VolOverMax);
-	dbg_printf("\t VolOverTime:%d \n",g_uoc_param.VolOverTime);
-	dbg_printf("\t VolUnderFlag:%d \n",g_uoc_param.VolUnderFlag);
-	dbg_printf("\t VolUnderMax:%d \n",g_uoc_param.VolUnderMax);
-	dbg_printf("\t VolUnderTime:%d \n",g_uoc_param.VolUnderTime);
-	dbg_printf("\t WrongPhaseFlag:%d \n",g_uoc_param.WrongPhaseFlag);
-	dbg_printf("\t LackPhaseFlag:%d \n",g_uoc_param.LackPhaseFlag);
-	dbg_printf("\t WrongPhaseTime:%d \n",g_uoc_param.WrongPhaseTime);
-	dbg_printf("\t LackPhaseTime:%d \n",g_uoc_param.LackPhaseTime);
-	dbg_printf("\t CurEquipFlag:%d \n",g_uoc_param.CurEquipFlag);
-	dbg_printf("\t CurEquipTime:%d \n",g_uoc_param.CurEquipTime);
-	dbg_printf("\t FaultTrippingFlag:%d \n",g_uoc_param.FaultTrippingFlag);
-	dbg_printf("\t DI9InputDelay:%d \n",g_uoc_param.DI9InputDelay);
-	dbg_printf("\t DI10InputDelay:%d \n",g_uoc_param.DI10InputDelay);
-	dbg_printf("\t DI11InputDelay:%d \n",g_uoc_param.DI11InputDelay);
-	dbg_printf("\t DI12InputDelay:%d \n",g_uoc_param.DI12InputDelay);
-	dbg_printf("\t DI13InputDelay:%d \n",g_uoc_param.DI13InputDelay);
-	dbg_printf("\t DI14InputDelay:%d \n",g_uoc_param.DI14InputDelay);
-	dbg_printf("\t DI7InputDelay:%d \n",g_uoc_param.DI7InputDelay);
-	dbg_printf("\t DI8InputDelay:%d \n",g_uoc_param.DI8InputDelay);
-	dbg_printf("\t ButtonInputDelay:%d \n",g_uoc_param.ButtonInputDelay);
-	dbg_printf("\t R03OutputDef:%d \n",g_uoc_param.R03OutputDef);
-	dbg_printf("\t R04OutputDef:%d \n",g_uoc_param.R04OutputDef);
-	dbg_printf("\t R05OutputDef:%d \n",g_uoc_param.R05OutputDef);
-	dbg_printf("\t DI7InputSet:%d \n",g_uoc_param.DI7InputSet);
-	dbg_printf("\t DI8InputSet:%d \n",g_uoc_param.DI8InputSet);
-	dbg_printf("\t DI9InputSet:%d \n",g_uoc_param.DI9InputSet);
-	dbg_printf("\t DI10InputSet:%d \n",g_uoc_param.DI10InputSet);
-	dbg_printf("\t DI11InputSet:%d \n",g_uoc_param.DI11InputSet);
-	dbg_printf("\t DI12InputSet:%d \n",g_uoc_param.DI12InputSet);
-	dbg_printf("\t DI13InputSet:%d \n",g_uoc_param.DI13InputSet);
-	dbg_printf("\t DI14InputSet:%d \n",g_uoc_param.DI14InputSet);
-	return;
-}
+
 void Debug_Display(void* buf,uint16_t len)
 {
 	unsigned char debugbuf[128];
