@@ -398,6 +398,9 @@ void MF_NVIC_Init(void)
 
 	InterruptConfigStruct.preemptPriority = 2;
     FL_NVIC_Init(&InterruptConfigStruct,UART1_IRQn ); 
+  
+  InterruptConfigStruct.preemptPriority = 2;
+    FL_NVIC_Init(&InterruptConfigStruct,UART5_IRQn ); 
 }
 
 void MF_UART1_Init(void)
@@ -434,6 +437,38 @@ void MF_UART1_Init(void)
 
     
 }
+void MF_UART5_Init(void)
+{
+
+    FL_GPIO_InitTypeDef    GPIO_InitStruct;
+
+    FL_UART_InitTypeDef    defaultInitStruct;
+
+	// GPIO_InitStruct.pin = FL_GPIO_PIN_1;
+	// GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
+	// GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	// GPIO_InitStruct.pull = FL_DISABLE;
+	// GPIO_InitStruct.remapPin = FL_DISABLE;
+
+	// FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	GPIO_InitStruct.pin = FL_GPIO_PIN_1 | FL_GPIO_PIN_0;
+	GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
+	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.pull = FL_DISABLE;
+	GPIO_InitStruct.remapPin = FL_DISABLE;
+	FL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    defaultInitStruct.clockSrc          = FL_RCC_UART1_CLK_SOURCE_APB1CLK;
+    defaultInitStruct.baudRate          = 9600;
+    defaultInitStruct.dataWidth         = FL_UART_DATA_WIDTH_8B;
+    defaultInitStruct.stopBits          = FL_UART_STOP_BIT_WIDTH_1B;
+    defaultInitStruct.parity            = FL_UART_PARITY_EVEN;
+    defaultInitStruct.transferDirection = FL_UART_DIRECTION_TX_RX;
+
+    FL_UART_Init(UART5,&defaultInitStruct );
+    
+}
 void MF_SysTemRest(void)
 {
     NVIC_SystemReset();
@@ -443,6 +478,10 @@ void MF_SysTemRest(void)
 void MF_Debug_Init()
 {
 	MF_UART1_Init();
+}
+void MF_UART_Init()
+{
+	MF_UART5_Init();
 }
 
 void MF_Production_Init()
@@ -464,6 +503,7 @@ void MF_Config_Init(void)
 	MF_Spi_Init();
 	MF_Led_Init();
 	MF_Debug_Init();
+  MF_UART_Init();
 	MF_Production_Init();
 	MF_Button_Init();
 	MF_I2C_Init();
@@ -473,8 +513,10 @@ void MF_Config_Init(void)
 	GPTIM_Start();
 
 
-		FL_UART_ClearFlag_RXBuffFull(UART1);
-    FL_UART_EnableIT_RXBuffFull(UART1);           //使能接收中断
+	FL_UART_ClearFlag_RXBuffFull(UART1);
+  FL_UART_EnableIT_RXBuffFull(UART1);           //使能接收中断
+  FL_UART_ClearFlag_RXBuffFull(UART5);
+  FL_UART_EnableIT_RXBuffFull(UART5);           //使能接收中断
 	//FL_UART_DisableIT_TXShiftBuffEmpty(UART1);
 }
 

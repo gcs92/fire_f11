@@ -179,6 +179,18 @@ void UART1_IRQHandler(void)
         UART_Rx_Handler(1);
     }
 }
+
+void UART5_IRQHandler(void)
+{
+    //接收中断处理
+    if((FL_ENABLE == FL_UART_IsEnabledIT_RXBuffFull(UART5))
+            && (FL_SET == FL_UART_IsActiveFlag_RXBuffFull(UART5)))
+    {
+        //中断转发接收到的数据
+        UART_Rx_Handler(5);
+    }
+}
+
 //两个字符串相等，则返回0，不相等则返回1
 uint16_t MemCmp(void *s1, const void *s2, uint16_t n)
 {
@@ -235,6 +247,17 @@ void SendBuf(UART_Type *WrokCom, uint8_t *buf , uint32_t size)
         data =  *( buf + i);
         SendOneByte( WrokCom , data);
     }
+}
+
+void UART_Tx(uint8_t index,void* buf,uint16_t len)
+{
+	while(GetSysTickCount() < (g_Uart[index]->txTickCount + g_Uart[index]->tx_interval));
+	if(buf != NULL && len > 0){
+		g_Uart[index]->txLen = len;
+		MemCpy(g_Uart[index]->rxBuf,buf,len);
+		SendBuf(g_Uart[index]->uart, g_Uart[index]->txBuf, g_Uart[index]->txLen);
+		g_Uart[index]->txTickCount = GetSysTickCount();
+	}
 }
 void dbg_printf(const char *fmt, ...)
 {

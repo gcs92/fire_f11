@@ -192,6 +192,14 @@ int main(void)
 				len = UART_RxGet(1,g_tmpRxBuf,sizeof(g_tmpRxBuf));	
 				Debug_Display(g_tmpRxBuf,len);
 		}
+		if(UART_RxFlag(5))//打印口
+		{					
+		  		uint16_t len;
+				len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
+					
+				//Debug_Display(g_tmpRxBuf,len);
+				UART_Tx(5,g_tmpRxBuf,len);
+		}
 		System_Funtion();
 		UOC_spi_read_data_cycle();
 		Input_Detection();

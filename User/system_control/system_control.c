@@ -10,6 +10,8 @@ extern eUOCDisplayErr_TypeDef UOC_ERR_PARA[EMAX];
 extern sParaFlag_TypeDef UOCPara;
 extern gUOCParameter_Check_TypeDef UOC_Check_Para;
 
+uint8_t DI_res_data;
+
 gUOCControl_TypeDef uoc_control[UOC_CONTROL_MAX] =
 {
 	{UOC_R00,	GPIOA,	FL_GPIO_PIN_8},
@@ -50,9 +52,56 @@ sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX] =
 };
 gUOCControl_StateDef UOC_Input_State={0};
 
+void protocol_deal(void *buf,uint8_t len)
+{
+	uint8_t bit = 0;
+	uint8_t i = 0;
+	F12_PROTOCOL send_data = {0xf1,0x00,0x55};
+	F12_PROTOCOL *rev_data = (F12_PROTOCOL*)buf;
+	if(rev_data->head == 0xf0 && rev_data->end == 0x55)
+	{
+		DI_res_data = rev_data->data;
+		send_data.data = 0x01;
+		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+		return;
+	}
+	UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+	return;
+}
+
+static int DI0(void)
+{
+	return DI_res_data & 0x01;
+}
+static int DI1(void)
+{
+	return (DI_res_data >> 1) & 0x01;
+}
+static int DI2(void)
+{
+	return (DI_res_data >> 2) & 0x01;
+}
+static int DI3(void)
+{
+	return (DI_res_data >> 3) & 0x01;
+}
+static int DI4(void)
+{
+	return (DI_res_data >> 4) & 0x01;
+}
 
 void Output_Control(unsigned char name,unsigned char flag)
 {
+	F12_PROTOCOL send_data = {0xf0,0x00,0x55};
+	if((name>= UOC_D02) && (name <= UOC_D08))
+	{
+		if(flag)
+			send_data.data |= flag << (name - 8);
+		else
+			send_data.data &= 0xfE << (name - 8);
+		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+		return;
+	}
 	if(flag == CONTORL_LOW)
 	{
 		FL_GPIO_ResetOutputPin(uoc_control[name].ControlGpio,uoc_control[name].ControlPin);
@@ -61,6 +110,7 @@ void Output_Control(unsigned char name,unsigned char flag)
 	{
 		FL_GPIO_SetOutputPin(uoc_control[name].ControlGpio,uoc_control[name].ControlPin);
 	}
+	return;
 }
 
 void Control_R03R04R05R06_Function(unsigned id,unsigned char flag)

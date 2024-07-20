@@ -2,11 +2,11 @@
 #define __SYSTEM_CONTROL_H__
 #include "fm33le0xx_fl.h"
 
-#define DI0()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_1)
-#define DI1()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_0)
-#define DI2()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_11)
-#define DI3()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_10)
-#define DI4()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_9)
+// #define DI0()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_1)
+// #define DI1()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_0)
+// #define DI2()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_11)
+// #define DI3()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_10)
+// #define DI4()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_9)
 #define DI5()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_0)
 #define DI6()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_1)
 #define DI7()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_2)
@@ -151,7 +151,12 @@ typedef enum
 	DI7_DI14MAX,				//DI7-DI14功能最大值
 } ENUM_DI7_DI14;
 
-
+typedef struct 
+{
+    uint8_t head;
+    uint8_t data;
+    uint8_t end;
+}F12_PROTOCOL;
 
 void Input_Detection(void);
 void Output_Control(unsigned char name,unsigned char flag);
