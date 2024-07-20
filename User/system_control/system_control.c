@@ -1,14 +1,8 @@
 #include "system_control.h"
 #include "timer.h"
 #include"debug.h"
-#include "parameter.h"
-#include "I2C.h"
-#include"button_function.h"
 
-extern gUOCParameter_TypeDef g_uoc_param;
-extern eUOCDisplayErr_TypeDef UOC_ERR_PARA[EMAX];
-extern sParaFlag_TypeDef UOCPara;
-extern gUOCParameter_Check_TypeDef UOC_Check_Para;
+
 
 gUOCControl_TypeDef uoc_control[UOC_CONTROL_MAX] =
 {
@@ -28,7 +22,7 @@ sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX] =
 	{UOC_DI2,0,0, UOC_DI2_FUNC},
 	{UOC_DI3,0,0, UOC_DI3_FUNC},
 	{UOC_DI4,0,0, UOC_DI4_FUNC},
-};s
+};
 
 
 void Output_Control(unsigned char name,unsigned char flag)
@@ -48,7 +42,7 @@ void UOC_DI0_FUNC(void)
 	if(DI0() == STATE_HIGH)
 	{
 		uoc_DI_Funtion[UOC_DI0].timeflag = 1;
-		if(uoc_DI_Funtion[UOC_DI0].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
+		if(uoc_DI_Funtion[UOC_DI0].timeCount > (keep_time))// +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI0].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI0].timeCount = 0;
@@ -70,7 +64,7 @@ void UOC_DI1_FUNC(void)
 	if(DI1() == STATE_HIGH)
 	{
 		uoc_DI_Funtion[UOC_DI1].timeflag = 1;
-		if(uoc_DI_Funtion[UOC_DI1].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
+		if(uoc_DI_Funtion[UOC_DI1].timeCount > (keep_time))// +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI1].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI1].timeCount = 0;
@@ -93,7 +87,7 @@ void UOC_DI2_FUNC(void)
 	if(DI2() == STATE_LOW)
 	{
 		uoc_DI_Funtion[UOC_DI2].timeflag = 1;
-		if(uoc_DI_Funtion[UOC_DI2].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
+		if(uoc_DI_Funtion[UOC_DI2].timeCount > (keep_time))// +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI2].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI2].timeCount = 0;
@@ -117,7 +111,7 @@ void UOC_DI3_FUNC(void)
 	if(DI3() == STATE_LOW)
 	{
 		uoc_DI_Funtion[UOC_DI3].timeflag = 1;
-		if(uoc_DI_Funtion[UOC_DI3].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
+		if(uoc_DI_Funtion[UOC_DI3].timeCount > (keep_time))// +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI3].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI3].timeCount = 0;

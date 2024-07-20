@@ -3,11 +3,8 @@
 #include "spi.h"
 #include "led.h"
 #include "timer.h"
-#include "button_function.h"
 #include "debug.h"
 #include "stdio.h"
-#include "i2c.h"
-#include "parameter.h"
 #include "system_control.h"
 #include "flash_api.h"
 #include "production_test.h"
@@ -15,8 +12,6 @@
 extern gUOCLed_TypeDef UOCLed[UOC_LED_MAX];
 uint8_t  g_tmpRxBuf[256];
 volatile uint32_t g_u32SysTickCount = 0;
-extern gUOCParameter_TypeDef g_uoc_param;
-extern gUOCParameter_TypeDef g_uoc_init_param;
 uint8_t UOC_VER[4] = {2,3,3,9};
 void uoc_wdt_init(void)
 {
@@ -45,27 +40,11 @@ void Debug_dispaly_init(void)
 void sys_control_init(void)
 {
 
-	
 }
-void UOC_Sys_Param_init(void)
-{
-	// uint8_t dataTmp[FLASH_PAGE_SIZE] = {0};
-	// g_uoc_param = g_uoc_init_param;
-    // if (true == flase_read(FLASH_SYSPARAM_ID, dataTmp, sizeof(gUOCParameter_TypeDef)))
-    // {
-    // 	debug_log("%s:%d:read flash success!!!!\n",__func__,__LINE__);
-    // 	if(dataTmp[0] != 0xFF){
-    //     	memcpy((uint8_t *)&g_uoc_param, dataTmp, sizeof(gUOCParameter_TypeDef));
-	// 		debug_log("%s:%d:set g_uoc_param success!!!!\n",__func__,__LINE__);
-    // 	}
-		
-    // }
-}
+
 void UOC_sys_data_init(void)
 {
-	//sys_control_init(); 
 	Debug_dispaly_init();	
-	//UOC_Sys_Param_init();
 	return;
 }
 
@@ -92,10 +71,10 @@ int main(void)
 	UOC_sys_data_init();
 
 	dbg_printf("Main start\n");
-	while(GetSysTickCount() < int_time)
-	{
-		production_test_main();
-	}
+//	while(GetSysTickCount() < int_time)
+//	{
+//		production_test_main();
+//	}
 
 	sys_control_init(); 
 
@@ -114,9 +93,9 @@ int main(void)
 				len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
 					
 				Debug_Display(g_tmpRxBuf,len);
+				UART_Tx(5,g_tmpRxBuf,len);
 		}
-		System_Funtion();
-		UOC_spi_read_data_cycle();
+
 		Input_Detection();
     }
 }

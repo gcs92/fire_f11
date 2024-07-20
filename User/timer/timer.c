@@ -1,9 +1,7 @@
 #include "timer.h"
 #include "led.h"
-#include"button_function.h"
 #include "system_control.h"
 
-extern sKeyFlag_TypeDef uoc_key[key_max];
 extern sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX];
 
 void GPTIM_Start()
@@ -31,13 +29,6 @@ void GPTIM1_IRQHandler()
     {
         FL_GPTIM_ClearFlag_Update(GPTIM1);
 
-		for(i=0;i<key_max;i++)
-		{
-        	if(uoc_key[i].timeflag == 1)
-        	{
-        		uoc_key[i].timeout++;
-        	}
-		}
 		for(i=0;i<UOC_DIMAX;i++)
 		{
         	if(uoc_DI_Funtion[i].timeflag == 1)

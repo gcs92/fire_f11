@@ -1,11 +1,9 @@
 #include"debug.h"
 #include"timer.h"
 #include <stdarg.h>
-#include"parameter.h"
 #include"spi.h"
 
 char  dbg_buf[DEBUG_BUF_SIZE];
-extern gUOCParameter_TypeDef g_uoc_param;
 int8_t uoc_loglevel = 0;
 
 
@@ -247,6 +245,18 @@ void SendBuf(UART_Type *WrokCom, uint8_t *buf , uint32_t size)
         SendOneByte( WrokCom , data);
     }
 }
+
+void UART_Tx(uint8_t index,void* buf,uint16_t len)
+{
+	while(GetSysTickCount() < (g_Uart[index]->txTickCount + g_Uart[index]->tx_interval));
+	if(buf != NULL && len > 0){
+		g_Uart[index]->txLen = len;
+		MemCpy(g_Uart[index]->rxBuf,buf,len);
+		SendBuf(g_Uart[index]->uart, g_Uart[index]->txBuf, g_Uart[index]->txLen);
+		g_Uart[index]->txTickCount = GetSysTickCount();
+	}
+}
+
 void dbg_printf(const char *fmt, ...)
 {
     va_list args;//biancan
@@ -295,31 +305,13 @@ void Debug_Display(void* buf,uint16_t len)
 		unsigned char num = debugbuf[5]-0x30;
 		uint32_t data_num;
 		dbg_printf("\t\t\t  num;%d \n",num);
-		switch (num)
-		{
-			case 0:
-				data_num = SPI_Read_data(UOC_SPI_DEV_ID);
-			break;
-			case 1:
-				data_num = SPI_Read_data(UOC_SPI_PHASE_A_VOLTAGE);
-			break;
-			case 2:
-				data_num = SPI_Read_data(UOC_SPI_PHASE_B_VOLTAGE);
-			break;
-			case 3:
-				data_num = SPI_Read_data(UOC_SPI_PHASE_C_VOLTAGE);
-			break;
-			default:
-				break;
-			
-		}
 		dbg_printf("\t\t\t  num;%08x \n",data_num);
 		
 	}
 	else if(MemCmp(debugbuf,"show info",9) == 0)
 	{
 		dbg_printf("显示参数信息\n");
-		Show_Param_info();
+		//Show_Param_info();
 	}
 	else if(MemCmp(debugbuf,"set debug",9) == 0)
 	{

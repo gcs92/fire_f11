@@ -136,6 +136,7 @@ typedef struct _UART_X
 
 uint16_t UART_RxFlag(uint8_t index);
 uint16_t UART_RxGet(uint8_t index,void* buf,uint16_t len);
+void UART_Tx(uint8_t index,void* buf,uint16_t len);
 uint16_t MemCmp(void *s1, const void *s2, uint16_t n);
 void *MemCpy(void *s1, const void *s2, uint16_t n);
 void *MemSet(void *s1, uint8_t c, uint16_t n);
