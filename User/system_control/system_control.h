@@ -33,7 +33,7 @@ typedef enum
     UOC_R06,
     UOC_D00,
     UOC_D01,
-    UOC_D02,
+    UOC_D02 = 0,
     UOC_D03,
     UOC_D04,
     UOC_D05,
@@ -114,13 +114,20 @@ typedef struct
     void (*cb)(void);
 } sDInputEvent_TypeDef;
 
+typedef struct 
+{
+    uint8_t head;
+    uint8_t data;
+    uint8_t end;
+}F12_PROTOCOL;
+
 
 
 void Input_Detection(void);
 void Output_Control(unsigned char name,unsigned char flag);
 void Control_Ordinary_Fan(unsigned char flag);
 void UOC_Trip_Fan(void);
-
+void protocol_deal(void *buf,uint8_t len);
 void UOC_DI0_FUNC(void);
 void UOC_DI1_FUNC(void);
 void UOC_DI2_FUNC(void);

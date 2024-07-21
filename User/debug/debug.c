@@ -248,13 +248,14 @@ void SendBuf(UART_Type *WrokCom, uint8_t *buf , uint32_t size)
 
 void UART_Tx(uint8_t index,void* buf,uint16_t len)
 {
-	while(GetSysTickCount() < (g_Uart[index]->txTickCount + g_Uart[index]->tx_interval));
-	if(buf != NULL && len > 0){
-		g_Uart[index]->txLen = len;
-		MemCpy(g_Uart[index]->rxBuf,buf,len);
-		SendBuf(g_Uart[index]->uart, g_Uart[index]->txBuf, g_Uart[index]->txLen);
-		g_Uart[index]->txTickCount = GetSysTickCount();
-	}
+	// while(GetSysTickCount() < (g_Uart[index]->txTickCount + g_Uart[index]->tx_interval));
+	// if(buf != NULL && len > 0){
+	// 	g_Uart[index]->txLen = len;
+	// 	MemCpy(g_Uart[index]->rxBuf,buf,len);
+	// 	SendBuf(g_Uart[index]->uart, g_Uart[index]->txBuf, g_Uart[index]->txLen);
+	// 	g_Uart[index]->txTickCount = GetSysTickCount();
+	// }
+	SendBuf(g_Uart[index]->uart, buf,len);
 }
 
 void dbg_printf(const char *fmt, ...)

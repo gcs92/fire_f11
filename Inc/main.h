@@ -73,7 +73,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
-#define int_time 1000
+#define int_time 2000
 
 #ifdef __cplusplus
 }

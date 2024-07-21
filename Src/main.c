@@ -39,6 +39,13 @@ void Debug_dispaly_init(void)
 
 void sys_control_init(void)
 {
+	Output_Control(UOC_D02,1);
+	Output_Control(UOC_D03,1);
+	Output_Control(UOC_D04,1);
+	Output_Control(UOC_D05,1);
+	Output_Control(UOC_D06,1);
+	Output_Control(UOC_D07,1);
+	Output_Control(UOC_D08,1);
 
 }
 
@@ -71,10 +78,16 @@ int main(void)
 	UOC_sys_data_init();
 
 	dbg_printf("Main start\n");
-//	while(GetSysTickCount() < int_time)
-//	{
-//		production_test_main();
-//	}
+	while(GetSysTickCount() < int_time)
+	{
+		Output_Control(UOC_D02,1);
+		Output_Control(UOC_D03,1);
+		Output_Control(UOC_D04,1);
+		Output_Control(UOC_D05,1);
+		Output_Control(UOC_D06,1);
+		Output_Control(UOC_D07,1);
+		Output_Control(UOC_D08,1);
+	}
 
 	sys_control_init(); 
 
@@ -83,17 +96,15 @@ int main(void)
     	//uoc_wdt_feed();
     	if(UART_RxFlag(1))//打印口
 		{					
-		  		uint16_t len;
-				len = UART_RxGet(1,g_tmpRxBuf,sizeof(g_tmpRxBuf));	
-				Debug_Display(g_tmpRxBuf,len);
+		  	uint16_t len;
+			len = UART_RxGet(1,g_tmpRxBuf,sizeof(g_tmpRxBuf));	
+			Debug_Display(g_tmpRxBuf,len);
 		}
 		if(UART_RxFlag(5))//打印口
 		{					
-		  		uint16_t len;
-				len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
-					
-				Debug_Display(g_tmpRxBuf,len);
-				UART_Tx(5,g_tmpRxBuf,len);
+		  	uint16_t len;
+			len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
+			protocol_deal(g_tmpRxBuf,len);
 		}
 
 		Input_Detection();
