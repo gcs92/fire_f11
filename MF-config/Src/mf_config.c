@@ -211,21 +211,21 @@ void MF_I2C_Init(void)
 
     FL_I2C_MasterMode_InitTypeDef    defaultInitStruct;
 
-    GPIO_InitStruct.pin = FL_GPIO_PIN_4;
+    GPIO_InitStruct.pin = FL_GPIO_PIN_11;
     GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
     GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_OPENDRAIN;
     GPIO_InitStruct.pull = FL_DISABLE;
     GPIO_InitStruct.remapPin = FL_ENABLE;
 
-    FL_GPIO_Init( GPIOC, &GPIO_InitStruct );
+    FL_GPIO_Init( GPIOA, &GPIO_InitStruct );
 
-    GPIO_InitStruct.pin = FL_GPIO_PIN_5;
+    GPIO_InitStruct.pin = FL_GPIO_PIN_12;
     GPIO_InitStruct.mode = FL_GPIO_MODE_DIGITAL;
     GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_OPENDRAIN;
     GPIO_InitStruct.pull = FL_DISABLE;
     GPIO_InitStruct.remapPin = FL_ENABLE;
 
-    FL_GPIO_Init( GPIOC, &GPIO_InitStruct );
+    FL_GPIO_Init( GPIOA, &GPIO_InitStruct );
 
     defaultInitStruct.clockSource = FL_RCC_I2C_CLK_SOURCE_RCHF;
     defaultInitStruct.baudRate = 40000;
@@ -338,7 +338,7 @@ void MF_Control_Init(void)
 	FL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 
-	GPIO_InitStruct.pin = FL_GPIO_PIN_0 | FL_GPIO_PIN_1 | FL_GPIO_PIN_9 | FL_GPIO_PIN_10 | FL_GPIO_PIN_11;
+	GPIO_InitStruct.pin =FL_GPIO_PIN_9 | FL_GPIO_PIN_10 | FL_GPIO_PIN_11;
 	GPIO_InitStruct.mode = FL_GPIO_MODE_INPUT;
 	GPIO_InitStruct.outputType = FL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.pull = FL_ENABLE;

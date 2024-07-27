@@ -54,8 +54,6 @@ gUOCControl_StateDef UOC_Input_State={0};
 
 void protocol_deal(void *buf,uint8_t len)
 {
-	uint8_t bit = 0;
-	uint8_t i = 0;
 	F12_PROTOCOL send_data = {0xf1,0x00,0x55};
 	F12_PROTOCOL *rev_data = (F12_PROTOCOL*)buf;
 	if(rev_data->head == 0xf0 && rev_data->end == 0x55)
@@ -63,6 +61,10 @@ void protocol_deal(void *buf,uint8_t len)
 		DI_res_data = rev_data->data;
 		send_data.data = 0x01;
 		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+		return;
+	}
+	else if(rev_data->head == 0xf1 && rev_data->end == 0x55)
+	{
 		return;
 	}
 	UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
@@ -92,14 +94,21 @@ static int DI4(void)
 
 void Output_Control(unsigned char name,unsigned char flag)
 {
-	F12_PROTOCOL send_data = {0xf0,0x00,0x55};
+	static uint8_t last_data =0;
+	static F12_PROTOCOL send_data = {0xf0,0x00,0x55};
 	if((name>= UOC_D02) && (name <= UOC_D08))
 	{
 		if(flag)
 			send_data.data |= flag << (name - 8);
+		
 		else
-			send_data.data &= 0xfE << (name - 8);
-		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+			send_data.data &= ((0xfE << (name - 8)) | (0xff >> (16 -name)) );
+		if(last_data != send_data.data)
+		{
+			last_data = send_data.data;
+			debug_log("output flag:%d name:%d data:%x\n",flag,name,send_data.data);
+			UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
+		}
 		return;
 	}
 	if(flag == CONTORL_LOW)
@@ -587,21 +596,26 @@ void Control_DI7_DI14_Function(unsigned id,unsigned char flag)
 
 void Input_Function_Cycle(void)
 {
+	static uint8_t led_flag = 2;
 	if(UOC_Input_State.mode_flag == 0)//手动
 	{
 		Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,CLOSE);
 		Control_R03R04R05R06_Function(UOC_MANUAL_RUN,OPEN);
 		//debug_log("%s:%d: 手动\n",__func__,__LINE__);
-
+		if(led_flag != 0){
 		Output_Control(UOC_D05,CONTORL_HIGH);//自动指示灯关闭
+		led_flag = 0;
+		}
 	}
 	else if(UOC_Input_State.mode_flag == 1)//自动
 	{
 		Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,OPEN);
 		Control_R03R04R05R06_Function(UOC_MANUAL_RUN,CLOSE);
 		//debug_log("%s:%d: 自动\n",__func__,__LINE__);
-
+		if(led_flag != 1){
 		Output_Control(UOC_D05,CONTORL_LOW);//自动指示灯开启
+		led_flag = 1;
+		}
 	}
 	return;
 }
