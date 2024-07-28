@@ -10,6 +10,8 @@
 #include "production_test.h"
 
 extern gUOCLed_TypeDef UOCLed[UOC_LED_MAX];
+extern F12_PROTOCOL *rev_data;
+extern F12_PROTOCOL send_buf;
 uint8_t  g_tmpRxBuf[256];
 volatile uint32_t g_u32SysTickCount = 0;
 uint8_t UOC_VER[4] = {2,3,3,9};
@@ -54,10 +56,54 @@ void UOC_sys_data_init(void)
 	Debug_dispaly_init();	
 	return;
 }
-
+void cycle_control(uint8_t flag)
+{
+	static uint32_t time = 0;
+	static uint8_t count = 0;
+	static uint8_t start_flag = 0;
+	if(start_flag == 0)
+		start_flag = flag;
+	if(time < GetSysTickCount())
+	{
+		count ++;
+		time = GetSysTickCount() + 1000;
+	}
+	if(count == 2)
+		count = 0;
+	if(start_flag == 0)
+	{
+		UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
+		if(GetSysTickCount() > 2000)
+			Output_Control(UOC_D04,count);
+	}else
+	{
+		Output_Control(UOC_D04,1);
+		if(count == 1)
+		{
+			if(rev_data == NULL)
+			return;
+			if(((rev_data->data >> 5) & 0x01) == 0x01)
+				Output_Control(UOC_BUZZER,count);
+			else if(((rev_data->data >> 1) & 0x01) == 0x01)
+				Output_Control(UOC_BUZZER,count);
+			else
+				Output_Control(UOC_BUZZER,0);
+		}
+		else
+		{
+			if(((rev_data->data >> 5) & 0x01) == 0x01)
+				return ;
+			else if(((rev_data->data >> 1) & 0x01) == 0x01)
+				Output_Control(UOC_BUZZER,count);
+			else
+				Output_Control(UOC_BUZZER,0);
+		}
+	}
+	return;
+}
 int main(void)
 {   
-	
+	uint8_t flag = 0;
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     /* SHOULD BE KEPT!!! */
     MF_Clock_Init();
@@ -78,21 +124,21 @@ int main(void)
 	UOC_sys_data_init();
 
 	dbg_printf("Main start\n");
-	while(GetSysTickCount() < int_time)
-	{
-		Output_Control(UOC_D02,1);
-		Output_Control(UOC_D03,1);
-		Output_Control(UOC_D04,1);
-		Output_Control(UOC_D05,1);
-		Output_Control(UOC_D06,1);
-		Output_Control(UOC_D07,1);
-		Output_Control(UOC_D08,1);
-	}
+	// while(GetSysTickCount() < int_time)
+	// {
+	// 	Output_Control(UOC_D02,1);
+	// 	Output_Control(UOC_D03,1);
+	// 	Output_Control(UOC_D04,1);
+	// 	Output_Control(UOC_D05,1);
+	// 	Output_Control(UOC_D06,1);
+	// 	Output_Control(UOC_D07,1);
+	// 	Output_Control(UOC_D08,1);
+	// }
 
 	sys_control_init(); 
 
     while(1)
-    {     
+    {
     	//uoc_wdt_feed();
     	if(UART_RxFlag(1))//打印口
 		{					
@@ -104,10 +150,11 @@ int main(void)
 		{					
 		  	uint16_t len;
 			len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
-			protocol_deal(g_tmpRxBuf,len);
+			flag = protocol_deal(g_tmpRxBuf,len);
 		}
 
 		Input_Detection();
+		cycle_control(flag);
     }
 }
 

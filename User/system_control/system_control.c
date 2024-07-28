@@ -3,6 +3,7 @@
 #include"debug.h"
 
 F12_PROTOCOL send_buf={0xf0,0x00,0x55};
+F12_PROTOCOL *rev_data = NULL;
 
 gUOCControl_TypeDef uoc_control[UOC_CONTROL_MAX] =
 {
@@ -12,7 +13,8 @@ gUOCControl_TypeDef uoc_control[UOC_CONTROL_MAX] =
 	{UOC_D05,	GPIOB, 	FL_GPIO_PIN_8},
 	{UOC_D06,	GPIOB, 	FL_GPIO_PIN_9},
 	{UOC_D07,	GPIOB, 	FL_GPIO_PIN_10},
-	{UOC_D08,	GPIOB, 	FL_GPIO_PIN_11}
+	{UOC_D08,	GPIOB, 	FL_GPIO_PIN_11},
+	{UOC_BUZZER,	GPIOB, 	FL_GPIO_PIN_3}
 };
 
 sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX] =
@@ -35,12 +37,12 @@ void Output_Control(unsigned char name,unsigned char flag)
 		FL_GPIO_SetOutputPin(uoc_control[name].ControlGpio,uoc_control[name].ControlPin);
 	}
 }
-void protocol_deal(void *buf,uint8_t len)
+uint8_t protocol_deal(void *buf,uint8_t len)
 {
 	uint8_t bit = 0;
 	uint8_t i = 0;
 	F12_PROTOCOL send_data = {0xf1,0x00,0x55};
-	F12_PROTOCOL *rev_data = (F12_PROTOCOL*)buf;
+	rev_data = (F12_PROTOCOL*)buf;
 	if(rev_data->head == 0xf0 && rev_data->end == 0x55)
 	{
 		for(i=1;i<8;i++){
@@ -49,10 +51,19 @@ void protocol_deal(void *buf,uint8_t len)
 		}
 		send_data.data = 0x01;
 		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
-		return;
+		return 1;
+	}
+	else if(rev_data->head == 0xf1 && rev_data->end == 0x55)
+	{
+		return 1;
+	}
+	else if(rev_data->head == 0xf3 && rev_data->end == 0x55)
+	{
+		UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
+		return 0;
 	}
 	UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
-	return;
+	return 0;
 }
 
 
@@ -172,7 +183,7 @@ void UOC_DI3_FUNC(void)
 void UOC_DI4_FUNC(void)
 {
 	static unsigned mode_flag = 0; 
-	if(DI4() == STATE_HIGH && mode_flag == 1)//开启手动
+	if(DI4() == STATE_HIGH && mode_flag == 0)//开启手动
 	{
 		debug_log("%s:%d: DI4:1 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;
@@ -182,7 +193,7 @@ void UOC_DI4_FUNC(void)
 			uoc_DI_Funtion[UOC_DI4].timeCount = 0;
 			if(DI4() == STATE_HIGH)
 			{
-				mode_flag = 0;
+				mode_flag = 1;
 				debug_log("%s:%d: UOC_DI0:0\n",__func__,__LINE__);
 				send_buf.data |= 0x01 << 4;
 				UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
@@ -190,7 +201,7 @@ void UOC_DI4_FUNC(void)
 			}
 		}
 	}
-	else if(DI4() == STATE_LOW && mode_flag == 0)//开启自动
+	else if(DI4() == STATE_LOW && mode_flag == 1)//开启自动
 	{
 		debug_log("%s:%d: DI4:0 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;
@@ -200,7 +211,7 @@ void UOC_DI4_FUNC(void)
 			uoc_DI_Funtion[UOC_DI4].timeCount = 0;
 			if(DI4() == STATE_LOW)
 			{
-				mode_flag = 1;
+				mode_flag = 0;
 				debug_log("%s:%d: UOC_DI0:1\n",__func__,__LINE__);
 				send_buf.data &= 0x00;
 				UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));

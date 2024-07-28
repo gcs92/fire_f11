@@ -40,6 +40,7 @@ typedef enum
 	UOC_D06,
 	UOC_D07,
 	UOC_D08,
+    UOC_BUZZER,
     UOC_CONTROL_MAX,
 } eUOCControlId_TypeDef;
 
@@ -127,7 +128,7 @@ void Input_Detection(void);
 void Output_Control(unsigned char name,unsigned char flag);
 void Control_Ordinary_Fan(unsigned char flag);
 void UOC_Trip_Fan(void);
-void protocol_deal(void *buf,uint8_t len);
+uint8_t protocol_deal(void *buf,uint8_t len);
 void UOC_DI0_FUNC(void);
 void UOC_DI1_FUNC(void);
 void UOC_DI2_FUNC(void);
