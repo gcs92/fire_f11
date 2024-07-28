@@ -155,7 +155,9 @@ void UOC_sys_data_init(void)
 
 int main(void)
 {   
-	
+	uint8_t start_flag = 0;
+	uint8_t ret = 0;
+	uint32_t start_time = 0;
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     /* SHOULD BE KEPT!!! */
     MF_Clock_Init();
@@ -185,7 +187,12 @@ int main(void)
 
     while(1)
     {     
-			
+		if((start_flag == 0) && start_time < GetSysTickCount())
+		{
+			uint8_t start_buf[3] = {0xf3,0x00,0x55};
+			start_time = GetSysTickCount() + 1000;
+			UART_Tx(5,start_buf,3);
+		}
     	if(UART_RxFlag(1))//打印口
 		{					
 			uint16_t len;
@@ -197,8 +204,12 @@ int main(void)
 		{
 		  	uint16_t len;
 			len = UART_RxGet(5,g_tmpRxBuf,sizeof(g_tmpRxBuf));
-			dbg_array_buffer("uart5",g_tmpRxBuf,len);
-			protocol_deal(g_tmpRxBuf,len);
+			//dbg_array_buffer("uart5",g_tmpRxBuf,len);
+			ret = protocol_deal(g_tmpRxBuf,len);
+			if(start_flag == 0)
+			{
+				start_flag = ret;
+			}
 			//UART_Tx(5,g_tmpRxBuf,len);
 		}
 		 System_Funtion();

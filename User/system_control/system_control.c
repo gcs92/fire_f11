@@ -52,7 +52,7 @@ sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX] =
 };
 gUOCControl_StateDef UOC_Input_State={0};
 
-void protocol_deal(void *buf,uint8_t len)
+uint8_t protocol_deal(void *buf,uint8_t len)
 {
 	F12_PROTOCOL send_data = {0xf1,0x00,0x55};
 	F12_PROTOCOL *rev_data = (F12_PROTOCOL*)buf;
@@ -61,14 +61,14 @@ void protocol_deal(void *buf,uint8_t len)
 		DI_res_data = rev_data->data;
 		send_data.data = 0x01;
 		UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
-		return;
+		return 1;
 	}
 	else if(rev_data->head == 0xf1 && rev_data->end == 0x55)
 	{
-		return;
+		return 2;
 	}
 	UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
-	return;
+	return 0;
 }
 
 static int DI0(void)
@@ -98,8 +98,8 @@ void Output_Control(unsigned char name,unsigned char flag)
 	static F12_PROTOCOL send_data = {0xf0,0x00,0x55};
 	if((name>= UOC_D02) && (name <= UOC_D08))
 	{
-		if(flag)
-			send_data.data |= flag << (name - 8);
+		if(flag == CONTORL_LOW)
+			send_data.data |= 0x01 << (name - 8);
 		
 		else
 			send_data.data &= ((0xfE << (name - 8)) | (0xff >> (16 -name)) );
@@ -769,21 +769,21 @@ void UOC_DI2_FUNC(void)
 	if(UOCPara.new_state == F_ERR || g_uoc_param.FanType == 1){
 		return;
 	}
-	if(DI2() == STATE_LOW && UOC_Input_State.high_speed_fan == 0 && UOC_Input_State.Ordinary_fan == 0 && UOC_Input_State.ready_high == 0 && UOC_Input_State.ready_Ordinary == 0)//低速风机启动
+	if(DI2() == STATE_HIGH && UOC_Input_State.high_speed_fan == 0 && UOC_Input_State.Ordinary_fan == 0 && UOC_Input_State.ready_high == 0 && UOC_Input_State.ready_Ordinary == 0)//低速风机启动
 	{
 		uoc_DI_Funtion[UOC_DI2].timeflag = 1;
 		if(uoc_DI_Funtion[UOC_DI2].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI2].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI2].timeCount = 0;
-			if(DI2() == STATE_LOW)
+			if(DI2() == STATE_HIGH)
 			{
 				debug_log("%s:%d: **Ordinary start!!!!!*******\n",__func__,__LINE__);
 				UOC_Input_State.ready_Ordinary = 1;//准备开启普通风机
 			}
 		}
 	}
-	else if(DI2() == STATE_HIGH)
+	else if(DI2() == STATE_LOW)
 	{
 		uoc_DI_Funtion[UOC_DI2].timeflag = 0;
 		uoc_DI_Funtion[UOC_DI2].timeCount = 0;
@@ -796,14 +796,14 @@ void UOC_DI3_FUNC(void)
 		return;
 	if(UOCPara.new_state == F_ERR)
 		return;
-	if(DI3() == STATE_LOW && UOC_Input_State.high_speed_fan == 0 && UOC_Input_State.ready_Ordinary == 0 && UOC_Input_State.ready_high == 0)//高速风机启动
+	if(DI3() == STATE_HIGH && UOC_Input_State.high_speed_fan == 0 && UOC_Input_State.ready_Ordinary == 0 && UOC_Input_State.ready_high == 0)//高速风机启动
 	{
 		uoc_DI_Funtion[UOC_DI3].timeflag = 1;
 		if(uoc_DI_Funtion[UOC_DI3].timeCount > (keep_time +(g_uoc_param.ButtonInputDelay*100)))
 		{
 			uoc_DI_Funtion[UOC_DI3].timeflag = 0;
 			uoc_DI_Funtion[UOC_DI3].timeCount = 0;
-			if(DI3() == STATE_LOW)
+			if(DI3() == STATE_HIGH)
 			{
 				if(UOC_Input_State.Ordinary_fan == 1)//低速风机开启状态中
 				{
@@ -823,7 +823,7 @@ void UOC_DI3_FUNC(void)
 			}
 		}
 	}
-	else if(DI3() == STATE_HIGH)
+	else if(DI3() == STATE_LOW)
 	{
 		uoc_DI_Funtion[UOC_DI3].timeflag = 0;
 		uoc_DI_Funtion[UOC_DI3].timeCount = 0;
@@ -846,7 +846,7 @@ void UOC_DI4_FUNC(void)
 				UOC_Input_State.mode_flag = 0;
 				Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,CLOSE);
 				Control_R03R04R05R06_Function(UOC_MANUAL_RUN,OPEN);
-				debug_log("%s:%d: UOC_DI0:0\n",__func__,__LINE__);
+				debug_log("%s:%d: UOC_DI4:0\n",__func__,__LINE__);
 
 				Output_Control(UOC_D05,CONTORL_HIGH);//自动指示灯关闭
 			}
@@ -865,7 +865,7 @@ void UOC_DI4_FUNC(void)
 				UOC_Input_State.mode_flag = 1;
 				Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,OPEN);
 				Control_R03R04R05R06_Function(UOC_MANUAL_RUN,CLOSE);
-				debug_log("%s:%d: UOC_DI0:1\n",__func__,__LINE__);
+				debug_log("%s:%d: UOC_DI4:1\n",__func__,__LINE__);
 
 				Output_Control(UOC_D05,CONTORL_LOW);//自动指示灯开启
 			}

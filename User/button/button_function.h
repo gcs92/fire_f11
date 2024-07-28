@@ -139,6 +139,7 @@ void UOC_paremeter_FREE_FUNC(void);
 void UOC_paremeter_ERR_FUNC(void);
 void uoc_ERR_Flag_clean(void);
 
+uint8_t protocol_deal(void *buf,uint8_t len);
 
 
 
