@@ -67,6 +67,10 @@ uint8_t protocol_deal(void *buf,uint8_t len)
 	{
 		return 2;
 	}
+	else if(rev_data->head == 0xf2 && rev_data->end == 0x55)
+	{
+		return 3;
+	}
 	UART_Tx(5,&send_data,sizeof(F12_PROTOCOL));
 	return 0;
 }

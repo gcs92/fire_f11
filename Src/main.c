@@ -187,11 +187,20 @@ int main(void)
 
     while(1)
     {     
-		if((start_flag == 0) && start_time < GetSysTickCount())
+		if(start_time < GetSysTickCount())
 		{
-			uint8_t start_buf[3] = {0xf3,0x00,0x55};
 			start_time = GetSysTickCount() + 1000;
-			UART_Tx(5,start_buf,3);
+			if(start_flag == 0)
+			{
+				uint8_t start_buf[3] = {0xf3,0x00,0x55};//信息同步
+				UART_Tx(5,start_buf,3);
+			}
+			else if(start_flag)
+			{
+				uint8_t start_buf[3] = {0xf2,0x00,0x55};//心跳
+				UART_Tx(5,start_buf,3);
+			}
+			
 		}
     	if(UART_RxFlag(1))//打印口
 		{					
