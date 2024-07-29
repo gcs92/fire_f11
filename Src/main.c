@@ -10,8 +10,9 @@
 #include "production_test.h"
 
 extern gUOCLed_TypeDef UOCLed[UOC_LED_MAX];
-extern F12_PROTOCOL *rev_data;
+extern F12_PROTOCOL hy_rev_data;
 extern F12_PROTOCOL send_buf;
+extern uint32_t heart_flag_time;
 uint8_t  g_tmpRxBuf[256];
 volatile uint32_t g_u32SysTickCount = 0;
 uint8_t UOC_VER[4] = {2,3,3,9};
@@ -65,14 +66,17 @@ void cycle_control(uint8_t flag)
 		start_flag = flag;
 	if(time < GetSysTickCount())
 	{
+		uint8_t heart_buf[3] = {0xf2,0x01,0x55};
 		count ++;
 		time = GetSysTickCount() + 1000;
+		UART_Tx(5,heart_buf,3);
 	}
 	if(count == 2)
 		count = 0;
-	if(start_flag == 0)
+	if(start_flag == 0 || heart_flag_time >= 3000)
 	{
-		UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
+		if(start_flag == 0)
+			UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
 		if(GetSysTickCount() > 2000)
 			Output_Control(UOC_D04,count);
 	}else
@@ -80,20 +84,18 @@ void cycle_control(uint8_t flag)
 		Output_Control(UOC_D04,1);
 		if(count == 1)
 		{
-			if(rev_data == NULL)
-			return;
-			if(((rev_data->data >> 5) & 0x01) == 0x01)
+			if(((hy_rev_data.data >> 5) & 0x01) == 0x01)
 				Output_Control(UOC_BUZZER,count);
-			else if(((rev_data->data >> 1) & 0x01) == 0x01)
+			else if(((hy_rev_data.data >> 1) & 0x01) == 0x01)
 				Output_Control(UOC_BUZZER,count);
 			else
 				Output_Control(UOC_BUZZER,0);
 		}
 		else
 		{
-			if(((rev_data->data >> 5) & 0x01) == 0x01)
+			if(((hy_rev_data.data >> 5) & 0x01) == 0x01)
 				return ;
-			else if(((rev_data->data >> 1) & 0x01) == 0x01)
+			else if(((hy_rev_data.data >> 1) & 0x01) == 0x01)
 				Output_Control(UOC_BUZZER,count);
 			else
 				Output_Control(UOC_BUZZER,0);

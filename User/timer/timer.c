@@ -3,7 +3,7 @@
 #include "system_control.h"
 
 extern sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX];
-
+extern uint32_t heart_flag_time;
 void GPTIM_Start()
 {
     //使能GPTIM
@@ -36,6 +36,8 @@ void GPTIM1_IRQHandler()
         		uoc_DI_Funtion[i].timeCount++;
         	}
 		}
+		
+		heart_flag_time ++ ;
 			
     }
 }
