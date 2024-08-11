@@ -106,6 +106,12 @@ typedef enum
 	UOC_DIMAX,
 } ENUM_DI;
 
+typedef struct
+{
+    uint16_t		flag:1;
+	uint16_t		timeflag:1;
+	uint16_t		timeout:14;
+} sKeyFlag_TypeDef;
 
 typedef struct
 {

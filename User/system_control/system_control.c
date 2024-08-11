@@ -188,8 +188,8 @@ void UOC_DI3_FUNC(void)
 }
 void UOC_DI4_FUNC(void)
 {
-	static unsigned mode_flag = 0; 
-	if(DI4() == STATE_HIGH && mode_flag == 0)//开启自动
+	static unsigned mode_flag = 2; 
+	if(DI4() == STATE_HIGH && (mode_flag == 0 || mode_flag ==2))//开启自动
 	{
 		debug_log("%s:%d: DI4:1 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;
@@ -207,7 +207,7 @@ void UOC_DI4_FUNC(void)
 			}
 		}
 	}
-	else if(DI4() == STATE_LOW && mode_flag == 1)//开启手动
+	else if(DI4() == STATE_LOW && (mode_flag == 1 || mode_flag ==2))//开启手动
 	{
 		debug_log("%s:%d: DI4:0 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;

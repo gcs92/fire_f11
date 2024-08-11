@@ -2,6 +2,7 @@
 #include "led.h"
 #include "system_control.h"
 
+extern sKeyFlag_TypeDef uoc_key;
 extern sDInputEvent_TypeDef uoc_DI_Funtion[UOC_DIMAX];
 extern uint32_t heart_flag_time;
 void GPTIM_Start()
@@ -29,6 +30,11 @@ void GPTIM1_IRQHandler()
     {
         FL_GPTIM_ClearFlag_Update(GPTIM1);
 
+        if(uoc_key.timeflag == 1)
+        {
+            uoc_key.timeout++;
+        }
+        
 		for(i=0;i<UOC_DIMAX;i++)
 		{
         	if(uoc_DI_Funtion[i].timeflag == 1)

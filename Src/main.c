@@ -75,8 +75,10 @@ void cycle_control(uint8_t flag)
 		count = 0;
 	if(start_flag == 0 || heart_flag_time >= 3000)
 	{
-		if(start_flag == 0)
+		if(start_flag == 0){
+			Delay1Ms(20);
 			UART_Tx(5,&send_buf,sizeof(F12_PROTOCOL));
+		}
 		if(GetSysTickCount() > 2000)
 			Output_Control(UOC_D04,count);
 	}else
@@ -126,18 +128,12 @@ int main(void)
 	UOC_sys_data_init();
 
 	dbg_printf("Main start\n");
-	// while(GetSysTickCount() < int_time)
-	// {
-	// 	Output_Control(UOC_D02,1);
-	// 	Output_Control(UOC_D03,1);
-	// 	Output_Control(UOC_D04,1);
-	// 	Output_Control(UOC_D05,1);
-	// 	Output_Control(UOC_D06,1);
-	// 	Output_Control(UOC_D07,1);
-	// 	Output_Control(UOC_D08,1);
-	// }
+	while(GetSysTickCount() < int_time)
+	{
+		production_test_main();
+	}
 
-	sys_control_init(); 
+	//sys_control_init(); 
 
     while(1)
     {
