@@ -7,6 +7,11 @@
 // #define DI2()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_11)
 // #define DI3()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_10)
 // #define DI4()	FL_GPIO_GetInputPin(GPIOD, FL_GPIO_PIN_9)
+int DI0(void);
+int DI1(void);
+int DI2(void);
+int DI3(void);
+int DI4(void);
 #define DI5()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_0)
 #define DI6()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_1)
 #define DI7()	FL_GPIO_GetInputPin(GPIOB, FL_GPIO_PIN_2)

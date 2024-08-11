@@ -75,23 +75,23 @@ uint8_t protocol_deal(void *buf,uint8_t len)
 	return 0;
 }
 
-static int DI0(void)
+int DI0(void)
 {
 	return DI_res_data & 0x01;
 }
-static int DI1(void)
+int DI1(void)
 {
 	return (DI_res_data >> 1) & 0x01;
 }
-static int DI2(void)
+int DI2(void)
 {
 	return (DI_res_data >> 2) & 0x01;
 }
-static int DI3(void)
+int DI3(void)
 {
 	return (DI_res_data >> 3) & 0x01;
 }
-static int DI4(void)
+int DI4(void)
 {
 	return (DI_res_data >> 4) & 0x01;
 }
@@ -837,7 +837,8 @@ void UOC_DI3_FUNC(void)
 void UOC_DI4_FUNC(void)
 {
 	//debug_log("%s:%d: DI4:NO  flag%d\n",__func__,__LINE__,UOC_Input_State.mode_flag);
-	if(DI4() == STATE_HIGH && UOC_Input_State.mode_flag == 1)//开启手动
+	static unsigned char start_flag = 0;
+	if(DI4() == STATE_HIGH && (UOC_Input_State.mode_flag == 1 || start_flag ==0))//开启手动
 	{
 		debug_log("%s:%d: DI4:1 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;
@@ -848,6 +849,7 @@ void UOC_DI4_FUNC(void)
 			if(DI4() == STATE_HIGH)
 			{
 				UOC_Input_State.mode_flag = 0;
+				start_flag = 1;
 				Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,CLOSE);
 				Control_R03R04R05R06_Function(UOC_MANUAL_RUN,OPEN);
 				debug_log("%s:%d: UOC_DI4:0\n",__func__,__LINE__);
@@ -856,7 +858,7 @@ void UOC_DI4_FUNC(void)
 			}
 		}
 	}
-	else if(DI4() == STATE_LOW && UOC_Input_State.mode_flag == 0)//开启自动
+	else if(DI4() == STATE_LOW && (UOC_Input_State.mode_flag == 0 || start_flag == 0))//开启自动
 	{
 		debug_log("%s:%d: DI4:0 %d\n",__func__,__LINE__,uoc_DI_Funtion[UOC_DI4].timeCount);
 		uoc_DI_Funtion[UOC_DI4].timeflag = 1;
@@ -867,6 +869,7 @@ void UOC_DI4_FUNC(void)
 			if(DI4() == STATE_LOW)
 			{
 				UOC_Input_State.mode_flag = 1;
+				start_flag = 1;
 				Control_R03R04R05R06_Function(UOC_AUTOMATIC_RUN,OPEN);
 				Control_R03R04R05R06_Function(UOC_MANUAL_RUN,CLOSE);
 				debug_log("%s:%d: UOC_DI4:1\n",__func__,__LINE__);
